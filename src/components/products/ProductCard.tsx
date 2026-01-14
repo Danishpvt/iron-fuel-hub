@@ -1,10 +1,11 @@
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
-import { Star, ShoppingCart, Heart } from "lucide-react";
+import { Star, ShoppingCart, Heart, GitCompare } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Product } from "@/types";
 import { useCart } from "@/context/CartContext";
+import { useCompare } from "@/context/CompareContext";
 
 interface ProductCardProps {
   product: Product;
@@ -12,6 +13,8 @@ interface ProductCardProps {
 
 const ProductCard = ({ product }: ProductCardProps) => {
   const { addToCart } = useCart();
+  const { addToCompare, removeFromCompare, isInCompare } = useCompare();
+  const inCompare = isInCompare(product.id);
   const discount = product.originalPrice
     ? Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)
     : 0;
@@ -58,6 +61,14 @@ const ProductCard = ({ product }: ProductCardProps) => {
             className="h-8 w-8 rounded-full"
           >
             <Heart className="h-4 w-4" />
+          </Button>
+          <Button
+            variant={inCompare ? "gold" : "secondary"}
+            size="icon"
+            className="h-8 w-8 rounded-full"
+            onClick={() => inCompare ? removeFromCompare(product.id) : addToCompare(product)}
+          >
+            <GitCompare className="h-4 w-4" />
           </Button>
         </div>
 
